@@ -46,7 +46,7 @@ func (g Game) setStoneAt(stone int, x, y int) {
 	g.Board[y*g.Size+x] = stone
 }
 
-func (g *Game) PlaceStone(stone int, x, y int) error {
+func (g *Game) PlaceStone(x, y int) error {
 	free, err := g.isIntersectionFree(x, y)
 	if err != nil {
 		return err
@@ -54,6 +54,8 @@ func (g *Game) PlaceStone(stone int, x, y int) error {
 	if !free {
 		return ErrNotEmpty
 	}
+
+	stone := g.CurrentStone
 	g.setStoneAt(stone, x, y)
 
 	// Switch player turn

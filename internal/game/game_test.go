@@ -9,15 +9,14 @@ import (
 
 func TestPlaceBlackStoneUpdatesBoard(t *testing.T) {
 	g := game.NewGame(9)
-	stone := game.BLACK
+	want := g.CurrentStone
 	x := 0
 	y := 0
-	err := g.PlaceStone(stone, x, y)
+	err := g.PlaceStone(x, y)
 	if err != nil {
 		t.Fatal("unexpected error placing stone in empty board")
 	}
 
-	want := stone
 	got, err := g.GetStoneAt(x, y)
 	if err != nil {
 		t.Fatal("unexpected error getting stone in board")
@@ -30,14 +29,13 @@ func TestPlaceBlackStoneUpdatesBoard(t *testing.T) {
 
 func TestCannotPlaceStoneTwice(t *testing.T) {
 	g := game.NewGame(9)
-	stone := game.BLACK
 	y := 0
 	x := 0
-	err := g.PlaceStone(stone, x, y)
+	err := g.PlaceStone(x, y)
 	if err != nil {
 		t.Fatal("unexpected error placing stone in empty board")
 	}
-	err = g.PlaceStone(stone, x, y)
+	err = g.PlaceStone(x, y)
 	if !errors.Is(err, game.ErrNotEmpty) {
 		t.Errorf("expected error, got %v", err)
 	}
@@ -69,10 +67,9 @@ func TestCannotGetStoneOutsideBoard(t *testing.T) {
 
 func TestPlacingStoneSwitchesTurns(t *testing.T) {
 	g := game.NewGame(9)
-	stone := game.BLACK
 	y := 0
 	x := 0
-	err := g.PlaceStone(stone, x, y)
+	err := g.PlaceStone(x, y)
 	if err != nil {
 		t.Fatal("unexpected error placing stone in empty board")
 	}

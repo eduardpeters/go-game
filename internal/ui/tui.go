@@ -58,7 +58,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			posX, posY := m.cursorX, m.cursorY
-			err := m.g.PlaceStone(m.g.CurrentStone, posX, posY)
+			err := m.g.PlaceStone(posX, posY)
 			if err != nil {
 				switch err {
 				case game.ErrNotEmpty:
