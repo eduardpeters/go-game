@@ -66,3 +66,20 @@ func TestCannotGetStoneOutsideBoard(t *testing.T) {
 		}
 	}
 }
+
+func TestPlacingStoneSwitchesTurns(t *testing.T) {
+	g := game.NewGame(9)
+	stone := game.BLACK
+	y := 0
+	x := 0
+	err := g.PlaceStone(stone, x, y)
+	if err != nil {
+		t.Fatal("unexpected error placing stone in empty board")
+	}
+
+	want := game.WHITE
+	got := g.CurrentStone
+	if got != want {
+		t.Errorf("Turn was not switched after placing stone. got %d want %d", got, want)
+	}
+}

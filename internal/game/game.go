@@ -13,23 +13,25 @@ const (
 )
 
 type Game struct {
-	ID        string
-	Size      int
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Board     []int
-	Moves     []string
+	ID           string
+	Size         int
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	CurrentStone int
+	Board        []int
+	Moves        []string
 }
 
 func NewGame(size int) *Game {
 	now := time.Now()
 	g := &Game{
-		ID:        uuid.NewString(),
-		Size:      size,
-		CreatedAt: now,
-		UpdatedAt: now,
-		Board:     make([]int, size*size),
-		Moves:     []string{},
+		ID:           uuid.NewString(),
+		Size:         size,
+		CreatedAt:    now,
+		UpdatedAt:    now,
+		CurrentStone: BLACK,
+		Board:        make([]int, size*size),
+		Moves:        []string{},
 	}
 	return g
 }
@@ -44,7 +46,7 @@ func (g Game) setStoneAt(stone int, x, y int) {
 	g.Board[y*g.Size+x] = stone
 }
 
-func (g Game) PlaceStone(stone int, x, y int) error {
+func (g *Game) PlaceStone(stone int, x, y int) error {
 	free, err := g.isIntersectionFree(x, y)
 	if err != nil {
 		return err
@@ -53,6 +55,14 @@ func (g Game) PlaceStone(stone int, x, y int) error {
 		return ErrNotEmpty
 	}
 	g.setStoneAt(stone, x, y)
+
+	// Switch player turn
+	if g.CurrentStone == BLACK {
+		g.CurrentStone = WHITE
+	} else {
+		g.CurrentStone = BLACK
+	}
+
 	return nil
 }
 

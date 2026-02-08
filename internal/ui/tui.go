@@ -58,7 +58,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			posX, posY := m.cursorX, m.cursorY
-			err := m.g.PlaceStone(1, posX, posY)
+			err := m.g.PlaceStone(m.g.CurrentStone, posX, posY)
 			if err != nil {
 				switch err {
 				case game.ErrNotEmpty:
@@ -82,9 +82,9 @@ func (m model) View() string {
 			idx := y*m.width + x
 			ch := "."
 			switch m.g.Board[idx] {
-			case 1:
+			case game.BLACK:
 				ch = "●"
-			case 2:
+			case game.WHITE:
 				ch = "○"
 			}
 			if x == m.cursorX && y == m.cursorY {
