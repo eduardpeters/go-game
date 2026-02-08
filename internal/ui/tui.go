@@ -57,13 +57,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.cursorX++
 			}
 		case "enter":
-			idx := m.cursorY*m.width + m.cursorX
-			if m.g.Board[idx] == 1 {
-				m.g.Board[idx] = 0
-				m.msg = fmt.Sprintf("Removed stone at %d,%d", m.cursorX, m.cursorY)
+			posX, posY := m.cursorX, m.cursorY
+			err := m.g.PlaceStone(1, posX, posY)
+			if err != nil {
+				switch err {
+				case game.ErrNotEmpty:
+					m.msg = fmt.Sprintf("Illegal move at %d,%d - Intersection not empty", posX, posY)
+				default:
+					m.msg = fmt.Sprintf("Unable to place stone at %d,%d - Unexpected error", posX, posY)
+				}
 			} else {
-				m.g.Board[idx] = 1
-				m.msg = fmt.Sprintf("Placed black stone at %d,%d", m.cursorX, m.cursorY)
+				m.msg = fmt.Sprintf("Placed stone at %d,%d", posX, posY)
 			}
 		}
 	}
