@@ -76,16 +76,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	var b strings.Builder
-	b.WriteString("Go Board\n\n")
+	if m.g.CurrentStone == game.BLACK {
+		b.WriteString("Black")
+	} else {
+		b.WriteString("White")
+	}
+	b.WriteString(" to place stone\n\n")
 	for y := 0; y < m.height; y++ {
 		for x := 0; x < m.width; x++ {
 			idx := y*m.width + x
 			ch := "."
 			switch m.g.Board[idx] {
 			case game.BLACK:
-				ch = "●"
-			case game.WHITE:
 				ch = "○"
+			case game.WHITE:
+				ch = "●"
 			}
 			if x == m.cursorX && y == m.cursorY {
 				b.WriteString("[" + ch + "]")
@@ -98,6 +103,6 @@ func (m model) View() string {
 	b.WriteString("\n")
 	b.WriteString(m.msg)
 	b.WriteString("\n\n")
-	b.WriteString("Keys: arrows / hjkl move • enter toggles a black stone • n new game • q quit\n")
+	b.WriteString("Keys: arrows / hjkl move • enter places stone • n new game • q quit\n")
 	return b.String()
 }
