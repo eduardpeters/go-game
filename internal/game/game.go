@@ -13,25 +13,27 @@ const (
 )
 
 type Game struct {
-	ID           string
-	Size         int
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	CurrentStone int
-	Board        []int
-	Moves        []string
+	ID                   string
+	Size                 int
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
+	CurrentStone         int
+	PreviousPlayerPassed bool
+	Board                []int
+	Moves                []string
 }
 
 func NewGame(size int) *Game {
 	now := time.Now()
 	g := &Game{
-		ID:           uuid.NewString(),
-		Size:         size,
-		CreatedAt:    now,
-		UpdatedAt:    now,
-		CurrentStone: BLACK,
-		Board:        make([]int, size*size),
-		Moves:        []string{},
+		ID:                   uuid.NewString(),
+		Size:                 size,
+		CreatedAt:            now,
+		UpdatedAt:            now,
+		CurrentStone:         BLACK,
+		PreviousPlayerPassed: false,
+		Board:                make([]int, size*size),
+		Moves:                []string{},
 	}
 	return g
 }
@@ -57,13 +59,8 @@ func (g *Game) PlaceStone(x, y int) error {
 
 	stone := g.CurrentStone
 	g.setStoneAt(stone, x, y)
-
-	// Switch player turn
-	if g.CurrentStone == BLACK {
-		g.CurrentStone = WHITE
-	} else {
-		g.CurrentStone = BLACK
-	}
+	g.PreviousPlayerPassed = false
+	g.switchPlayerTurn()
 
 	return nil
 }
@@ -74,4 +71,18 @@ func (g Game) isIntersectionFree(x, y int) (bool, error) {
 		return false, err
 	}
 	return stone == EMPTY, nil
+}
+
+func (g *Game) PassTurn() {
+	g.PreviousPlayerPassed = true
+	g.switchPlayerTurn()
+
+}
+
+func (g *Game) switchPlayerTurn() {
+	if g.CurrentStone == BLACK {
+		g.CurrentStone = WHITE
+	} else {
+		g.CurrentStone = BLACK
+	}
 }

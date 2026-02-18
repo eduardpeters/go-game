@@ -80,3 +80,39 @@ func TestPlacingStoneSwitchesTurns(t *testing.T) {
 		t.Errorf("Turn was not switched after placing stone. got %d want %d", got, want)
 	}
 }
+
+func TestPassingTurnUpdatesGameStateAndSwitchesTurns(t *testing.T) {
+	g := game.NewGame(9)
+
+	g.PassTurn()
+
+	if !g.PreviousPlayerPassed {
+		t.Errorf("Passed turn was not registered in game state. got %v want %v", g.PreviousPlayerPassed, true)
+	}
+
+	want := game.WHITE
+	got := g.CurrentStone
+	if got != want {
+		t.Errorf("Turn was not switched after passing turn. got %d want %d", got, want)
+	}
+}
+
+func TestPassingAndThenPlayingResetsPassingFlag(t *testing.T) {
+	g := game.NewGame(9)
+
+	g.PassTurn()
+
+	if !g.PreviousPlayerPassed {
+		t.Errorf("Passed turn was not registered in game state. got %v want %v", g.PreviousPlayerPassed, true)
+	}
+
+	y := 0
+	x := 0
+	err := g.PlaceStone(x, y)
+	if err != nil {
+		t.Fatal("unexpected error placing stone in empty board")
+	}
+	if g.PreviousPlayerPassed {
+		t.Errorf("Placing stone after passed turn did not reset passesd turn flag. got %v want %v", g.PreviousPlayerPassed, false)
+	}
+}
