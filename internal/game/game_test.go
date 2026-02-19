@@ -113,6 +113,18 @@ func TestPassingAndThenPlayingResetsPassingFlag(t *testing.T) {
 		t.Fatal("unexpected error placing stone in empty board")
 	}
 	if g.PreviousPlayerPassed {
-		t.Errorf("Placing stone after passed turn did not reset passesd turn flag. got %v want %v", g.PreviousPlayerPassed, false)
+		t.Errorf("Placing stone after passed turn did not reset passed turn flag. got %v want %v", g.PreviousPlayerPassed, false)
+	}
+}
+
+func TestPassingTwiceEndsGame(t *testing.T) {
+	g := game.NewGame(9)
+	g.PassTurn()
+	g.PassTurn()
+
+	want := true
+	got := g.HasEnded()
+	if got != want {
+		t.Errorf("Game did not end passing turn twice. got %v want %v", got, want)
 	}
 }

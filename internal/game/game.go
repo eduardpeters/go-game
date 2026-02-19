@@ -19,6 +19,7 @@ type Game struct {
 	UpdatedAt            time.Time
 	CurrentStone         int
 	PreviousPlayerPassed bool
+	hasEnded             bool
 	Board                []int
 	Moves                []string
 }
@@ -32,10 +33,15 @@ func NewGame(size int) *Game {
 		UpdatedAt:            now,
 		CurrentStone:         BLACK,
 		PreviousPlayerPassed: false,
+		hasEnded:             false,
 		Board:                make([]int, size*size),
 		Moves:                []string{},
 	}
 	return g
+}
+
+func (g Game) HasEnded() bool {
+	return g.hasEnded
 }
 
 func (g Game) GetStoneAt(x, y int) (int, error) {
@@ -44,6 +50,7 @@ func (g Game) GetStoneAt(x, y int) (int, error) {
 	}
 	return g.Board[y*g.Size+x], nil
 }
+
 func (g Game) setStoneAt(stone int, x, y int) {
 	g.Board[y*g.Size+x] = stone
 }
@@ -74,8 +81,12 @@ func (g Game) isIntersectionFree(x, y int) (bool, error) {
 }
 
 func (g *Game) PassTurn() {
-	g.PreviousPlayerPassed = true
-	g.switchPlayerTurn()
+	if g.PreviousPlayerPassed {
+		g.hasEnded = true
+	} else {
+		g.PreviousPlayerPassed = true
+		g.switchPlayerTurn()
+	}
 
 }
 
