@@ -9,7 +9,7 @@ import (
 
 func TestPlaceBlackStoneUpdatesBoard(t *testing.T) {
 	g := game.NewGame(9)
-	want := g.CurrentStone
+	want := g.GetCurrentStone()
 	x := 0
 	y := 0
 	err := g.PlaceStone(x, y)
@@ -75,7 +75,7 @@ func TestPlacingStoneSwitchesTurns(t *testing.T) {
 	}
 
 	want := game.WHITE
-	got := g.CurrentStone
+	got := g.GetCurrentStone()
 	if got != want {
 		t.Errorf("Turn was not switched after placing stone. got %d want %d", got, want)
 	}
@@ -99,7 +99,7 @@ func TestPassingTurnSwitchesTurns(t *testing.T) {
 	g.PassTurn()
 
 	want := game.WHITE
-	got := g.CurrentStone
+	got := g.GetCurrentStone()
 	if got != want {
 		t.Errorf("Turn was not switched after passing turn. got %d want %d", got, want)
 	}

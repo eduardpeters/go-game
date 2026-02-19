@@ -76,7 +76,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	var b strings.Builder
-	if m.g.CurrentStone == game.BLACK {
+	if m.g.GetCurrentStone() == game.BLACK {
 		b.WriteString("Black")
 	} else {
 		b.WriteString("White")
