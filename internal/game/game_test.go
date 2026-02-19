@@ -81,14 +81,22 @@ func TestPlacingStoneSwitchesTurns(t *testing.T) {
 	}
 }
 
-func TestPassingTurnUpdatesGameStateAndSwitchesTurns(t *testing.T) {
+func TestPassingTurnUpdatesGameState(t *testing.T) {
 	g := game.NewGame(9)
 
 	g.PassTurn()
 
-	if !g.PreviousPlayerPassed {
-		t.Errorf("Passed turn was not registered in game state. got %v want %v", g.PreviousPlayerPassed, true)
+	got := g.GetPreviousPlayerPassed()
+	want := true
+	if got != want {
+		t.Errorf("Passed turn was not registered in game state. got %v want %v", got, want)
 	}
+}
+
+func TestPassingTurnSwitchesTurns(t *testing.T) {
+	g := game.NewGame(9)
+
+	g.PassTurn()
 
 	want := game.WHITE
 	got := g.CurrentStone
@@ -102,8 +110,10 @@ func TestPassingAndThenPlayingResetsPassingFlag(t *testing.T) {
 
 	g.PassTurn()
 
-	if !g.PreviousPlayerPassed {
-		t.Errorf("Passed turn was not registered in game state. got %v want %v", g.PreviousPlayerPassed, true)
+	got := g.GetPreviousPlayerPassed()
+	want := true
+	if got != want {
+		t.Errorf("Passed turn was not registered in game state. got %v want %v", got, want)
 	}
 
 	y := 0
@@ -112,8 +122,11 @@ func TestPassingAndThenPlayingResetsPassingFlag(t *testing.T) {
 	if err != nil {
 		t.Fatal("unexpected error placing stone in empty board")
 	}
-	if g.PreviousPlayerPassed {
-		t.Errorf("Placing stone after passed turn did not reset passed turn flag. got %v want %v", g.PreviousPlayerPassed, false)
+
+	got = g.GetPreviousPlayerPassed()
+	want = false
+	if got != want {
+		t.Errorf("Placing stone after passed turn did not reset passed turn flag. got %v want %v", got, want)
 	}
 }
 
@@ -123,7 +136,7 @@ func TestPassingTwiceEndsGame(t *testing.T) {
 	g.PassTurn()
 
 	want := true
-	got := g.HasEnded()
+	got := g.GetHasEnded()
 	if got != want {
 		t.Errorf("Game did not end passing turn twice. got %v want %v", got, want)
 	}
