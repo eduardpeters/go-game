@@ -69,6 +69,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.msg = fmt.Sprintf("Placed stone at %d,%d", posX, posY)
 			}
+		case "backspace":
+			var stone string
+			if m.g.GetCurrentStone() == game.BLACK {
+				stone = "Black"
+			} else {
+				stone = "White"
+			}
+			m.g.PassTurn()
+			m.msg = fmt.Sprintf("%s has passed the turn", stone)
 		}
 	}
 	return m, nil
@@ -103,6 +112,6 @@ func (m model) View() string {
 	b.WriteString("\n")
 	b.WriteString(m.msg)
 	b.WriteString("\n\n")
-	b.WriteString("Keys: arrows / hjkl move • enter places stone • n new game • q quit\n")
+	b.WriteString("Keys: arrows / hjkl move • enter places stone • backspace passes turn • n new game • q quit\n")
 	return b.String()
 }
