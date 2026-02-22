@@ -141,3 +141,14 @@ func TestPassingTwiceEndsGame(t *testing.T) {
 		t.Errorf("Game did not end passing turn twice. got %v want %v", got, want)
 	}
 }
+
+func TestPlacingStonesOnAFinishedGameIsNotAllowed(t *testing.T) {
+	g := game.NewGame(9)
+	g.PassTurn()
+	g.PassTurn()
+
+	err := g.PlaceStone(0, 0)
+	if !errors.Is(err, game.ErrHasEnded) {
+		t.Errorf("expected error, got %v", err)
+	}
+}

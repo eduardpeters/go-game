@@ -64,6 +64,10 @@ func (g Game) setStoneAt(stone int, x, y int) {
 }
 
 func (g *Game) PlaceStone(x, y int) error {
+	if g.hasEnded {
+		return ErrHasEnded
+	}
+
 	free, err := g.isIntersectionFree(x, y)
 	if err != nil {
 		return err
