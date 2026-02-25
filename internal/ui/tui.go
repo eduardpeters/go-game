@@ -15,24 +15,24 @@ type model struct {
 }
 
 func NewModel() tea.Model {
-	return model{
-		page: newGamePageModel(),
+	return &model{
+		page: newMenuPageModel(),
 	}
 }
 
-func (m model) Init() tea.Cmd { return m.page.Init() }
+func (m *model) Init() tea.Cmd { return m.page.Init() }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	newPage, cmd := m.page.Update(msg)
-	if newPage != m.page {
-		m.page = newPage
-		initCmd := m.page.Init()
-		return m, tea.Batch(initCmd)
+
+	m.page = newPage
+	if m.page != newPage {
+		return m, m.page.Init()
 	}
 
 	return m, cmd
 }
 
-func (m model) View() string {
+func (m *model) View() string {
 	return m.page.View()
 }

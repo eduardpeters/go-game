@@ -17,25 +17,26 @@ type GamePageModel struct {
 	msg     string
 }
 
-func newGamePageModel() Page {
+func newGamePageModel() *GamePageModel {
 	g := game.NewGame(9)
-	return GamePageModel{
+	return &GamePageModel{
 		g:       g,
 		width:   g.Size,
 		height:  g.Size,
 		cursorX: 0,
 		cursorY: 0,
+		msg:     fmt.Sprintf("New %[1]dx%[1]d game created.", 9),
 	}
 }
 
-func (m GamePageModel) Init() tea.Cmd { return nil }
+func (m *GamePageModel) Init() tea.Cmd { return nil }
 
-func (m GamePageModel) Update(msg tea.Msg) (Page, tea.Cmd) {
+func (m *GamePageModel) Update(msg tea.Msg) (Page, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "q", "ctrl+c":
-			return m, tea.Quit
+			return newMenuPageModel(), nil
 		case "n":
 			m.g = game.NewGame(9)
 			m.msg = fmt.Sprintf("New %[1]dx%[1]d game created.", 9)
@@ -83,7 +84,7 @@ func (m GamePageModel) Update(msg tea.Msg) (Page, tea.Cmd) {
 	return m, nil
 }
 
-func (m GamePageModel) View() string {
+func (m *GamePageModel) View() string {
 	var b strings.Builder
 	if m.g.GetCurrentStone() == game.BLACK {
 		b.WriteString("Black")
