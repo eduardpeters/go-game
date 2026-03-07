@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/eduardpeters/go-game/internal/game"
 )
 
@@ -33,7 +33,7 @@ func (m *GamePageModel) Init() tea.Cmd { return nil }
 
 func (m *GamePageModel) Update(msg tea.Msg) (Page, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "q", "ctrl+c":
 			return newMenuPageModel(), nil
@@ -84,7 +84,7 @@ func (m *GamePageModel) Update(msg tea.Msg) (Page, tea.Cmd) {
 	return m, nil
 }
 
-func (m *GamePageModel) View() string {
+func (m *GamePageModel) View() tea.View {
 	var b strings.Builder
 	if m.g.GetCurrentStone() == game.BLACK {
 		b.WriteString("Black")
@@ -114,5 +114,6 @@ func (m *GamePageModel) View() string {
 	b.WriteString(m.msg)
 	b.WriteString("\n\n")
 	b.WriteString("Keys: arrows / hjkl move • enter places stone • backspace passes turn • n new game • q quit\n")
-	return b.String()
+
+	return tea.NewView(b.String())
 }

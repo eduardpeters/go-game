@@ -1,13 +1,13 @@
 package ui
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 type Page interface {
 	Init() tea.Cmd
 	Update(tea.Msg) (Page, tea.Cmd)
-	View() string
+	View() tea.View
 }
 
 type model struct {
@@ -33,6 +33,6 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m *model) View() string {
+func (m *model) View() tea.View {
 	return m.page.View()
 }

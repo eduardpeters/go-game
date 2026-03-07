@@ -3,7 +3,7 @@ package ui
 import (
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 const (
@@ -32,7 +32,7 @@ func (m *MenuPageModel) Init() tea.Cmd { return nil }
 
 func (m *MenuPageModel) Update(msg tea.Msg) (Page, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "q", "ctrl+c":
 			return m, tea.Quit
@@ -57,7 +57,7 @@ func (m *MenuPageModel) Update(msg tea.Msg) (Page, tea.Cmd) {
 	return m, nil
 }
 
-func (m *MenuPageModel) View() string {
+func (m *MenuPageModel) View() tea.View {
 	var b strings.Builder
 	b.WriteString("Choose an action:\n\n")
 	for _, o := range m.options {
@@ -69,5 +69,5 @@ func (m *MenuPageModel) View() string {
 	}
 	b.WriteString("\n\n")
 	b.WriteString("Keys: j/k, up/down: select • enter: choose\n")
-	return b.String()
+	return tea.NewView(b.String())
 }
